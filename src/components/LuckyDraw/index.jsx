@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import TextLoop from "react-text-loop";
 import MovingComponent from "react-moving-text";
@@ -40,6 +40,7 @@ function LuckyDraw(props) {
   const [winAudio, setWinAudio] = useState(
     new Audio("https://luckydraw.live/audio/v1/sm-spin.mp3")
   );
+  const winnerTimeoutRef = useRef(null);
   useEffect(() => {
     setWinnerNumber([0, 0, 0, 0, 0, 0]);
   }, [prizeType]);
@@ -80,7 +81,21 @@ function LuckyDraw(props) {
   useEffect(() => {
     setHiddenWinner({});
     setWinner({});
+    // Clear any pending timeout when step changes
+    if (winnerTimeoutRef.current) {
+      clearTimeout(winnerTimeoutRef.current);
+      winnerTimeoutRef.current = null;
+    }
   }, [currentStep]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (winnerTimeoutRef.current) {
+        clearTimeout(winnerTimeoutRef.current);
+      }
+    };
+  }, []);
 
   console.log({
     stopObj,
@@ -111,6 +126,7 @@ function LuckyDraw(props) {
   ];
 
   const getWinnerInfo = () => {
+    console.log('winner', winner)
     if (winner) {
       if (winner.Type) {
         return winner.Type === "SVTT"
@@ -290,6 +306,13 @@ function LuckyDraw(props) {
           {!spinning ? (
             <button
               onClick={() => {
+                // Clear any pending winner timeout from previous spin
+                if (winnerTimeoutRef.current) {
+                  clearTimeout(winnerTimeoutRef.current);
+                  winnerTimeoutRef.current = null;
+                }
+                // Always clear winner immediately when starting new spin
+                setWinner({});
                 setStop(false);
                 setStopObj({
                   0: false,
@@ -304,9 +327,6 @@ function LuckyDraw(props) {
                 audio.loop = true;
                 // playAudio = setInterval(() => audio.play(), 1000);
                 setInterval(100);
-                if (currentStep !== 4) {
-                  setWinner({});
-                }
                 if (currentNumber > 5) {
                   setCurrentNumber(0);
                 }
@@ -362,6 +382,8 @@ function LuckyDraw(props) {
                 const winner = data[Math.floor(Math.random() * data.length)];
                 const winnerNumber = winner.id.split("");
                 if (currentStep === 4) {
+                  console.log('current step 4: ', currentStep)
+
                   setStopObj({
                     ...stopObj,
                     [currentNumber]: true,
@@ -382,8 +404,13 @@ function LuckyDraw(props) {
                   if (currentNumber === 5) {
                     // last spin
                     setSpinning(false);
-                    setTimeout(() => {
+                    // Clear any existing timeout
+                    if (winnerTimeoutRef.current) {
+                      clearTimeout(winnerTimeoutRef.current);
+                    }
+                    winnerTimeoutRef.current = setTimeout(() => {
                       setWinner(hiddenWinner);
+                      winnerTimeoutRef.current = null;
                     }, 3200);
                     setTimeout(() => {
                       // setIsOpen(true);
@@ -394,6 +421,7 @@ function LuckyDraw(props) {
                   }
                   setCurrentNumber((prev) => prev + 1);
                 } else {
+                  console.log('current step', currentStep)
                   setStopObj({
                     0: true,
                     1: true,
@@ -402,8 +430,13 @@ function LuckyDraw(props) {
                     4: true,
                     5: true,
                   });
-                  setTimeout(() => {
+                  // Clear any existing timeout
+                  if (winnerTimeoutRef.current) {
+                    clearTimeout(winnerTimeoutRef.current);
+                  }
+                  winnerTimeoutRef.current = setTimeout(() => {
                     setWinner(winner);
+                    winnerTimeoutRef.current = null;
                   }, 3200);
                   setSpinning(false);
                   setWinnerNumber(winnerNumber);

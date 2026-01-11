@@ -56,7 +56,7 @@ function Home() {
   return (
     <SiteWrapper>
       <div className="text-center text-[#FFD212] font-bold text-6xl pb-4">
-        Year End Party 2023
+        Year End Party 2025
       </div>
 
       {openPrize ? (
