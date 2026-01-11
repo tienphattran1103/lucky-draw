@@ -126,7 +126,6 @@ function LuckyDraw(props) {
   ];
 
   const getWinnerInfo = () => {
-    console.log('winner', winner)
     if (winner) {
       if (winner.Type) {
         return winner.Type === "SVTT"
@@ -382,7 +381,6 @@ function LuckyDraw(props) {
                 const winner = data[Math.floor(Math.random() * data.length)];
                 const winnerNumber = winner.id.split("");
                 if (currentStep === 4) {
-                  console.log('current step 4: ', currentStep)
 
                   setStopObj({
                     ...stopObj,
@@ -396,10 +394,7 @@ function LuckyDraw(props) {
                     const filterData = data.filter((e) => e.id !== winner.id);
                     setData(filterData);
                     localStorage.setItem("list", JSON.stringify(filterData));
-                    let prevList =
-                      JSON.parse(localStorage.getItem(prizeType)) || [];
-                    prevList.push(winner);
-                    localStorage.setItem(prizeType, JSON.stringify(prevList));
+                    // Don't save to prizeType yet, wait until winner is displayed
                   }
                   if (currentNumber === 5) {
                     // last spin
@@ -410,6 +405,11 @@ function LuckyDraw(props) {
                     }
                     winnerTimeoutRef.current = setTimeout(() => {
                       setWinner(hiddenWinner);
+                      // Save to prizeType only when winner is displayed
+                      let prevList =
+                        JSON.parse(localStorage.getItem(prizeType)) || [];
+                      prevList.push(hiddenWinner);
+                      localStorage.setItem(prizeType, JSON.stringify(prevList));
                       winnerTimeoutRef.current = null;
                     }, 3200);
                     setTimeout(() => {
@@ -421,7 +421,6 @@ function LuckyDraw(props) {
                   }
                   setCurrentNumber((prev) => prev + 1);
                 } else {
-                  console.log('current step', currentStep)
                   setStopObj({
                     0: true,
                     1: true,
@@ -434,17 +433,21 @@ function LuckyDraw(props) {
                   if (winnerTimeoutRef.current) {
                     clearTimeout(winnerTimeoutRef.current);
                   }
+                  // Remove winner from data list immediately to prevent re-selection
+                  const filterData = data.filter((e) => e.id !== winner.id);
+                  setData(filterData);
+                  localStorage.setItem("list", JSON.stringify(filterData));
                   winnerTimeoutRef.current = setTimeout(() => {
                     setWinner(winner);
+                    // Save to prizeType only when winner is displayed
+                    let prevList =
+                      JSON.parse(localStorage.getItem(prizeType)) || [];
+                    prevList.push(winner);
+                    localStorage.setItem(prizeType, JSON.stringify(prevList));
                     winnerTimeoutRef.current = null;
                   }, 3200);
                   setSpinning(false);
                   setWinnerNumber(winnerNumber);
-                  setData(data.filter((e) => e.id !== winner.id));
-                  let prevList =
-                    JSON.parse(localStorage.getItem(prizeType)) || [];
-                  prevList.push(winner);
-                  localStorage.setItem(prizeType, JSON.stringify(prevList));
                   setTimeout(() => {
                     // setIsOpen(true);
                     winAudio.play();
