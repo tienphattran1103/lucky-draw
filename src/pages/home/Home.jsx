@@ -18,11 +18,11 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import CardGiftcardIcon from "@mui/icons-material/CardGiftcard";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import Carousel from "react-bootstrap/Carousel";
-import kkPrize from "../../img/sac-du-phong-anker-323-usb-c-powercore-piq-10-000mah-a1334.png";
-import Prize3 from "../../img/tab-a7-lite-332_main_909.png";
-import Prize2 from "../../img/lc-khong-khi-electrolux-fa31-202gy_a2245e14.png";
-import Prize1 from "../../img/loa_karaoke_di_dong_nova_audio_nv_300_platinum_mau_den_6.png";
-import PrizeSpecial from "../../img/smart-tivi-samsung-4k-55.png";
+import kkPrize from "../../img/chuot_logitech.png";
+import Prize3 from "../../img/camera_ai.png";
+import Prize2 from "../../img/may_anh_instax.png";
+import Prize1 from "../../img/robot_hut_bui_xiaomi.png";
+import PrizeSpecial from "../../img/may_loc_khong_khi_dyson.webp";
 import CustomDialog from "../../components/CustomDialog";
 import CustomizedDialogs from "../../components/WinnerList/Dialog";
 import BasicTabs from "../../components/WinnerList";
@@ -80,7 +80,7 @@ function Home() {
                     Giải khuyến khích
                   </span>
                   <h5 class="text-3xl font-semibold tracking-tight text-gray-900 dark:text-white mt-[20px]">
-                    Pin sạc dự phòng Anker 323
+                    Chuột và dây sạc high-tech
                   </h5>
                 </div>
                 <div>
@@ -100,7 +100,7 @@ function Home() {
                     Giải ba
                   </span>
                   <h5 class="text-3xl font-semibold tracking-tight text-gray-900 dark:text-white mt-[20px]">
-                    Samsung Galaxy Tab A7 Lite
+                    Camera AI
                   </h5>
                 </div>
                 <div>
@@ -120,7 +120,7 @@ function Home() {
                     Giải nhì
                   </span>
                   <h5 class="text-3xl font-semibold tracking-tight text-gray-900 dark:text-white mt-[20px]">
-                    1 Máy lọc không khí Electrolux Fa31
+                    Máy ảnh instax in liền
                   </h5>
                 </div>
                 <div>
@@ -140,7 +140,7 @@ function Home() {
                     Giải nhất
                   </span>
                   <h5 class="text-3xl font-semibold tracking-tight text-gray-900 dark:text-white mt-[20px]">
-                    1 Loa Di Động Nova Audio NV-300
+                    Robot hút bụi lau nhà Xiaomi
                   </h5>
                 </div>
                 <div>
@@ -160,7 +160,7 @@ function Home() {
                     Giải đặc biệt
                   </span>
                   <h5 class="text-3xl stroke-slate-700 font-semibold tracking-tight text-gray-900 dark:text-white mt-[20px]">
-                    1 Smart Tivi SAMSUNG
+                    Máy lọc không khí Dyson
                   </h5>
                 </div>
                 <div>
