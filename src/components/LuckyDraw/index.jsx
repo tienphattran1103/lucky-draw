@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 
 import TextLoop from "react-text-loop";
 import MovingComponent from "react-moving-text";
@@ -140,6 +140,150 @@ function LuckyDraw(props) {
   };
 
   const winnerInfo = getWinnerInfo();
+
+  // Hàm bắt đầu quay số
+  const handleStartSpin = useCallback(() => {
+    // Clear any pending winner timeout from previous spin
+    if (winnerTimeoutRef.current) {
+      clearTimeout(winnerTimeoutRef.current);
+      winnerTimeoutRef.current = null;
+    }
+    // Always clear winner immediately when starting new spin
+    setWinner({});
+    setStop(false);
+    setStopObj({
+      0: false,
+      1: false,
+      2: false,
+      3: false,
+      4: false,
+      5: false,
+    });
+    setSpinning(true);
+    audio.play();
+    audio.loop = true;
+    setInterval(100);
+    if (currentNumber > 5) {
+      setCurrentNumber(0);
+    }
+  }, [currentNumber, audio, winnerTimeoutRef]);
+
+  // Hàm dừng và chốt số
+  const handleStopSpin = useCallback(() => {
+    const winner = data[Math.floor(Math.random() * data.length)];
+    const winnerNumber = winner.id.split("");
+    if (currentStep === 4) {
+      setStopObj({
+        ...stopObj,
+        [currentNumber]: true,
+      });
+
+      if (currentNumber === 0) {
+        // first spin
+        setHiddenWinner(winner);
+        setWinnerNumber(winnerNumber);
+        const filterData = data.filter((e) => e.id !== winner.id);
+        setData(filterData);
+        localStorage.setItem("list", JSON.stringify(filterData));
+      }
+      if (currentNumber === 5) {
+        // last spin
+        setSpinning(false);
+        // Clear any existing timeout
+        if (winnerTimeoutRef.current) {
+          clearTimeout(winnerTimeoutRef.current);
+        }
+        winnerTimeoutRef.current = setTimeout(() => {
+          setWinner(hiddenWinner);
+          // Save to prizeType only when winner is displayed
+          let prevList =
+            JSON.parse(localStorage.getItem(prizeType)) || [];
+          prevList.push(hiddenWinner);
+          localStorage.setItem(prizeType, JSON.stringify(prevList));
+          winnerTimeoutRef.current = null;
+        }, 3200);
+        setTimeout(() => {
+          winAudio.play();
+        }, timeout);
+        audio.pause();
+        setAudio(audio);
+      }
+      setCurrentNumber((prev) => prev + 1);
+    } else {
+      setStopObj({
+        0: true,
+        1: true,
+        2: true,
+        3: true,
+        4: true,
+        5: true,
+      });
+      // Clear any existing timeout
+      if (winnerTimeoutRef.current) {
+        clearTimeout(winnerTimeoutRef.current);
+      }
+      // Remove winner from data list immediately to prevent re-selection
+      const filterData = data.filter((e) => e.id !== winner.id);
+      setData(filterData);
+      localStorage.setItem("list", JSON.stringify(filterData));
+      winnerTimeoutRef.current = setTimeout(() => {
+        setWinner(winner);
+        // Save to prizeType only when winner is displayed
+        let prevList =
+          JSON.parse(localStorage.getItem(prizeType)) || [];
+        prevList.push(winner);
+        localStorage.setItem(prizeType, JSON.stringify(prevList));
+        winnerTimeoutRef.current = null;
+      }, 3200);
+      setSpinning(false);
+      setWinnerNumber(winnerNumber);
+      setTimeout(() => {
+        winAudio.play();
+      }, timeout);
+      audio.pause();
+      setAudio(audio);
+    }
+    setStop(true);
+  }, [currentStep, currentNumber, stopObj, data, prizeType, hiddenWinner, audio, winAudio, timeout, winnerTimeoutRef]);
+
+  // Xử lý keydown từ bút trình chiếu
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      // Các phím thường được gửi từ bút trình chiếu:
+      // PageUp, PageDown, ArrowUp, ArrowDown, Space, Enter
+      const presenterKeys = [
+        "PageUp",
+        "PageDown",
+        "ArrowUp",
+        "ArrowDown",
+        " ",
+        "Enter",
+      ];
+
+      console.log('event.key: ', event.key);
+
+      // Chỉ xử lý khi nhấn phím từ bút trình chiếu
+      if (presenterKeys.includes(event.key)) {
+        event.preventDefault(); // Ngăn hành vi mặc định của trình duyệt
+
+        if (!spinning) {
+          // Nếu đang không quay số, bắt đầu quay số
+          handleStartSpin();
+        } else {
+          // Nếu đang quay số, dừng và chốt số
+          handleStopSpin();
+        }
+      }
+    };
+
+    // Thêm event listener
+    window.addEventListener("keydown", handleKeyDown);
+
+    // Cleanup khi component unmount
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [spinning, handleStartSpin, handleStopSpin]);
 
   return (
     <div className="">
@@ -304,32 +448,7 @@ function LuckyDraw(props) {
         >
           {!spinning ? (
             <button
-              onClick={() => {
-                // Clear any pending winner timeout from previous spin
-                if (winnerTimeoutRef.current) {
-                  clearTimeout(winnerTimeoutRef.current);
-                  winnerTimeoutRef.current = null;
-                }
-                // Always clear winner immediately when starting new spin
-                setWinner({});
-                setStop(false);
-                setStopObj({
-                  0: false,
-                  1: false,
-                  2: false,
-                  3: false,
-                  4: false,
-                  5: false,
-                });
-                setSpinning(true);
-                audio.play();
-                audio.loop = true;
-                // playAudio = setInterval(() => audio.play(), 1000);
-                setInterval(100);
-                if (currentNumber > 5) {
-                  setCurrentNumber(0);
-                }
-              }}
+              onClick={handleStartSpin}
               style={{
                 // color: "rgb(106, 76, 8)",
                 // boxShadow: "rgb(254, 242, 105) 0px -5px inset",
@@ -377,102 +496,7 @@ function LuckyDraw(props) {
             </button>
           ) : (
             <button
-              onClick={() => {
-                const winner = data[Math.floor(Math.random() * data.length)];
-                const winnerNumber = winner.id.split("");
-                if (currentStep === 4) {
-
-                  setStopObj({
-                    ...stopObj,
-                    [currentNumber]: true,
-                  });
-
-                  if (currentNumber === 0) {
-                    // first spin
-                    setHiddenWinner(winner);
-                    setWinnerNumber(winnerNumber);
-                    const filterData = data.filter((e) => e.id !== winner.id);
-                    setData(filterData);
-                    localStorage.setItem("list", JSON.stringify(filterData));
-                    // Don't save to prizeType yet, wait until winner is displayed
-                  }
-                  if (currentNumber === 5) {
-                    // last spin
-                    setSpinning(false);
-                    // Clear any existing timeout
-                    if (winnerTimeoutRef.current) {
-                      clearTimeout(winnerTimeoutRef.current);
-                    }
-                    winnerTimeoutRef.current = setTimeout(() => {
-                      setWinner(hiddenWinner);
-                      // Save to prizeType only when winner is displayed
-                      let prevList =
-                        JSON.parse(localStorage.getItem(prizeType)) || [];
-                      prevList.push(hiddenWinner);
-                      localStorage.setItem(prizeType, JSON.stringify(prevList));
-                      winnerTimeoutRef.current = null;
-                    }, 3200);
-                    setTimeout(() => {
-                      // setIsOpen(true);
-                      winAudio.play();
-                    }, timeout);
-                    audio.pause();
-                    setAudio(audio);
-                  }
-                  setCurrentNumber((prev) => prev + 1);
-                } else {
-                  setStopObj({
-                    0: true,
-                    1: true,
-                    2: true,
-                    3: true,
-                    4: true,
-                    5: true,
-                  });
-                  // Clear any existing timeout
-                  if (winnerTimeoutRef.current) {
-                    clearTimeout(winnerTimeoutRef.current);
-                  }
-                  // Remove winner from data list immediately to prevent re-selection
-                  const filterData = data.filter((e) => e.id !== winner.id);
-                  setData(filterData);
-                  localStorage.setItem("list", JSON.stringify(filterData));
-                  winnerTimeoutRef.current = setTimeout(() => {
-                    setWinner(winner);
-                    // Save to prizeType only when winner is displayed
-                    let prevList =
-                      JSON.parse(localStorage.getItem(prizeType)) || [];
-                    prevList.push(winner);
-                    localStorage.setItem(prizeType, JSON.stringify(prevList));
-                    winnerTimeoutRef.current = null;
-                  }, 3200);
-                  setSpinning(false);
-                  setWinnerNumber(winnerNumber);
-                  setTimeout(() => {
-                    // setIsOpen(true);
-                    winAudio.play();
-                  }, timeout);
-                  audio.pause();
-                  setAudio(audio);
-                }
-                //   setWinnerNumber(winnerNumber);
-                setStop(true);
-
-                // setTimeout(() => {
-                //   setWinner(winner);
-                // }, 3200);
-                // setData(data.filter((e) => e.id !== winner.id));
-                // let prevList =
-                //   JSON.parse(localStorage.getItem(prizeType)) || [];
-                // prevList.push(winner);
-                // localStorage.setItem(prizeType, JSON.stringify(prevList));
-                // setTimeout(() => {
-                //   // setIsOpen(true);
-                //   winAudio.play();
-                // }, timeout);
-                // audio.pause();
-                // setAudio(audio);
-              }}
+              onClick={handleStopSpin}
               style={{
                 color: "rgb(106, 76, 8)",
                 boxShadow: "rgb(254, 242, 105) 0px -5px inset",
