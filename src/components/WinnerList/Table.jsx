@@ -6,9 +6,9 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 
 export default function BasicTable(props) {
+  // eslint-disable-next-line no-unused-vars
   const { data, prizeType } = props;
   return (
     <TableContainer component={Paper}>

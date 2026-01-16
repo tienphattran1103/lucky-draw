@@ -1,11 +1,11 @@
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import SiteWrapper from "../../SiteWrapper";
 import { useTheme } from "@mui/material/styles";
 import { list as data } from "../../data/list";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import { Stepper, Grid } from "@mui/material";
+import { Stepper } from "@mui/material";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import "./Home.css";
@@ -23,7 +23,6 @@ import Prize3 from "../../img/imou_smart_home_security_camera_ai_human_detection
 import Prize2 from "../../img/may_anh_instax.png";
 import Prize1 from "../../img/robot_hut_bui_xiaomi.png";
 import PrizeSpecial from "../../img/may_loc_khong_khi_dyson.webp";
-import CustomDialog from "../../components/CustomDialog";
 import CustomizedDialogs from "../../components/WinnerList/Dialog";
 import BasicTabs from "../../components/WinnerList";
 
@@ -147,7 +146,7 @@ function Home() {
                   </h5>
                 </div>
                 <div>
-                  <img className="w-[40rem]"  src={kkPrize} alt="product image" />
+                  <img className="w-[40rem]"  src={kkPrize} alt="product img" />
                 </div>
               </Stack>
             </Carousel.Item>
@@ -167,7 +166,7 @@ function Home() {
                   </h5>
                 </div>
                 <div>
-                  <img className="w-[36rem] mt-[40px]"  src={Prize3} alt="product image" />
+                  <img className="w-[36rem] mt-[40px]"  src={Prize3} alt="product img" />
                 </div>
               </Stack>
             </Carousel.Item>
@@ -187,7 +186,7 @@ function Home() {
                   </h5>
                 </div>
                 <div>
-                  <img className="w-[50rem]"  src={Prize2} alt="product image" />
+                  <img className="w-[50rem]"  src={Prize2} alt="product img" />
                 </div>
               </Stack>
             </Carousel.Item>
@@ -207,7 +206,7 @@ function Home() {
                   </h5>
                 </div>
                 <div>
-                  <img className="w-[40rem]"  src={Prize1} alt="product image" />
+                  <img className="w-[40rem]"  src={Prize1} alt="product img" />
                 </div>
               </Stack>
             </Carousel.Item>
@@ -230,7 +229,7 @@ function Home() {
                   <img
                     className="w-[40rem]" 
                     src={PrizeSpecial}
-                    alt="product image"
+                    alt="product img"
                   />
                 </div>
               </Stack>
