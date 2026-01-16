@@ -301,6 +301,7 @@ function LuckyDraw(props) {
           style={{
             maxWidth: "442px",
             margin: "0 auto",
+            display: "none",
           }}
         >
           {priceImageSelections[currentStep] && (
