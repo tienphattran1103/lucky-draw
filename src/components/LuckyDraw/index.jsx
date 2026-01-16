@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 
 import TextLoop from "react-text-loop";
 import MovingComponent from "react-moving-text";
@@ -60,6 +60,8 @@ function LuckyDraw(props) {
     }
   }, [prizeType]);
 
+  const winnerStringified = useMemo(() => JSON.stringify(winner), [winner]);
+
   useEffect(() => {
     const winnerElements = document.querySelector("#winner");
     if (winnerElements) {
@@ -68,7 +70,7 @@ function LuckyDraw(props) {
         winnerElements.classList.remove("labelWinner");
       }, 1500);
     }
-  }, [JSON.stringify(winner)]);
+  }, [winnerStringified]);
 
   const priceImageSelections = {
     1: "https://luckydraw.live/images/temp/bronze-prize.svg",
@@ -78,8 +80,9 @@ function LuckyDraw(props) {
   };
 
   useEffect(() => {
-    setData(JSON.parse(localStorage.getItem("list")));
-  }, [JSON.parse(localStorage.getItem("list")).length]);
+    const listFromStorage = JSON.parse(localStorage.getItem("list"));
+    setData(listFromStorage);
+  }, [data.length]);
 
   useEffect(() => {
     setHiddenWinner({});
