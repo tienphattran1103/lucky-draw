@@ -19,7 +19,7 @@ import CardGiftcardIcon from "@mui/icons-material/CardGiftcard";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import Carousel from "react-bootstrap/Carousel";
 import kkPrize from "../../img/chuot_logitech.png";
-import Prize3 from "../../img/camera_ai.png";
+import Prize3 from "../../img/imou_smart_home_security_camera_ai_human_detection_4mp_ipc-a42n_-_white_1.png";
 import Prize2 from "../../img/may_anh_instax.png";
 import Prize1 from "../../img/robot_hut_bui_xiaomi.png";
 import PrizeSpecial from "../../img/may_loc_khong_khi_dyson.webp";
