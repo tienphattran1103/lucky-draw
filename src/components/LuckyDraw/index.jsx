@@ -2,7 +2,7 @@ import { useEffect, useState, useRef, useCallback } from "react";
 
 import TextLoop from "react-text-loop";
 import MovingComponent from "react-moving-text";
-import { list as data, list } from "../../data/list";
+import { list as data } from "../../data/list";
 import "./index.css";
 import Stack from "@mui/material/Stack";
 import CustomDialog from "../CustomDialog";
@@ -19,6 +19,7 @@ const defaultList = [
 localStorage.setItem("list", JSON.stringify(data));
 function LuckyDraw(props) {
   const { prizeType, currentStep } = props;
+  // eslint-disable-next-line no-unused-vars
   const [stop, setStop] = useState(false);
   const [stopObj, setStopObj] = useState({
     0: false,
@@ -38,6 +39,7 @@ function LuckyDraw(props) {
   const timeout = 3100;
   const [data, setData] = useState(JSON.parse(localStorage.getItem("list")));
   const [audio, setAudio] = useState(new Audio(Test));
+  // eslint-disable-next-line no-unused-vars
   const [winAudio, setWinAudio] = useState(
     new Audio("https://luckydraw.live/audio/v1/sm-spin.mp3")
   );
