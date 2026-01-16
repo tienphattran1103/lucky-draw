@@ -76,10 +76,10 @@ function Home() {
                 alignItems="center"
               >
                 <div className="">
-                  <span className="text-5xl stroke-1 stroke-slate-200 font-bold text-gray-900 dark:text-white">
+                  <span className="text-5xl stroke-1 stroke-slate-200 font-bold text-white dark:text-white">
                     Giải khuyến khích
                   </span>
-                  <h5 class="text-3xl font-semibold tracking-tight text-gray-900 dark:text-white mt-[20px]">
+                  <h5 class="text-3xl font-semibold tracking-tight text-white dark:text-white mt-[20px]">
                     Chuột và dây sạc high-tech
                   </h5>
                 </div>
@@ -96,10 +96,10 @@ function Home() {
                 alignItems="center"
               >
                 <div className="">
-                  <span className="text-5xl font-bold text-gray-900 dark:text-white">
+                  <span className="text-5xl font-bold text-white dark:text-white">
                     Giải ba
                   </span>
-                  <h5 class="text-3xl font-semibold tracking-tight text-gray-900 dark:text-white mt-[20px]">
+                  <h5 class="text-3xl font-semibold tracking-tight text-white dark:text-white mt-[20px]">
                     Camera AI
                   </h5>
                 </div>
@@ -116,10 +116,10 @@ function Home() {
                 alignItems="center"
               >
                 <div className="">
-                  <span className="text-5xl font-bold text-gray-900 dark:text-white">
+                  <span className="text-5xl font-bold text-white dark:text-white">
                     Giải nhì
                   </span>
-                  <h5 class="text-3xl font-semibold tracking-tight text-gray-900 dark:text-white mt-[20px]">
+                  <h5 class="text-3xl font-semibold tracking-tight text-white dark:text-white mt-[20px]">
                     Máy ảnh instax in liền
                   </h5>
                 </div>
@@ -136,10 +136,10 @@ function Home() {
                 alignItems="center"
               >
                 <div className="">
-                  <span className="text-5xl font-bold text-gray-900 dark:text-white">
+                  <span className="text-5xl font-bold text-white dark:text-white">
                     Giải nhất
                   </span>
-                  <h5 class="text-3xl font-semibold tracking-tight text-gray-900 dark:text-white mt-[20px]">
+                  <h5 class="text-3xl font-semibold tracking-tight text-white dark:text-white mt-[20px]">
                     Robot hút bụi lau nhà Xiaomi
                   </h5>
                 </div>
@@ -156,10 +156,10 @@ function Home() {
                 alignItems="center"
               >
                 <div className="">
-                  <span className="text-5xl font-bold text-gray-900 dark:text-white">
+                  <span className="text-5xl font-bold text-white dark:text-white">
                     Giải đặc biệt
                   </span>
-                  <h5 class="text-3xl stroke-slate-700 font-semibold tracking-tight text-gray-900 dark:text-white mt-[20px]">
+                  <h5 class="text-3xl stroke-slate-700 font-semibold tracking-tight text-white dark:text-white mt-[20px]">
                     Máy lọc không khí Dyson
                   </h5>
                 </div>
