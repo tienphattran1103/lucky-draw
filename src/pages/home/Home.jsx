@@ -53,6 +53,69 @@ function Home() {
     }
   };
 
+  // Xử lý keydown để điều hướng giữa các giải
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      // Phím 'e' → toggle giữa Quay số và Thông tin Giải (hoạt động ở mọi trạng thái trừ khi mở dialog kết quả)
+      if (event.key === "e" || event.key === "E") {
+        if (!openResult) {
+          event.preventDefault();
+          setOpenPrize((prev) => !prev);
+        }
+        return;
+      }
+
+      // Xử lý khi đang ở phần Thông tin Giải (carousel)
+      if (openPrize && !openResult) {
+        // Tab → carousel qua phải
+        if (event.key === "Tab") {
+          event.preventDefault();
+          const maxCarouselIndex = 4; // Có 5 items (0-4)
+          if (index < maxCarouselIndex) {
+            setIndex((prevIndex) => prevIndex + 1);
+          }
+          return;
+        }
+        // PageUp → carousel qua trái
+        else if (event.key === "PageUp") {
+          event.preventDefault();
+          if (index > 0) {
+            setIndex((prevIndex) => prevIndex - 1);
+          }
+          return;
+        }
+      }
+
+      // Chỉ xử lý các phím khác khi không đang ở trong dialog hoặc carousel
+      if (openResult || openPrize) {
+        return;
+      }
+
+      // Tab → next giải
+      if (event.key === "Tab") {
+        event.preventDefault();
+        if (activeStep < maxSteps - 1) {
+          setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        }
+      }
+      // PageUp → back giải trước
+      else if (event.key === "PageUp") {
+        event.preventDefault();
+        if (activeStep > 0) {
+          setActiveStep((prevActiveStep) => prevActiveStep - 1);
+        }
+      }
+    };
+
+    // Thêm event listener
+    window.addEventListener("keydown", handleKeyDown);
+
+    // Cleanup khi component unmount
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [activeStep, maxSteps, openResult, openPrize, index]);
+
   return (
     <SiteWrapper>
       <div className="text-center text-[#FFD212] font-bold text-6xl pb-4">

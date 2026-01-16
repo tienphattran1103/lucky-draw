@@ -253,10 +253,10 @@ function LuckyDraw(props) {
       // Các phím thường được gửi từ bút trình chiếu:
       // PageUp, PageDown, ArrowUp, ArrowDown, Space, Enter
       const presenterKeys = [
-        "PageUp",
+        // "PageUp",
         "PageDown",
-        "ArrowUp",
-        "ArrowDown",
+        // "ArrowUp",
+        // "ArrowDown",
         " ",
         "Enter",
       ];
