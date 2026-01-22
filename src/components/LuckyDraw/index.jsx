@@ -79,10 +79,21 @@ function LuckyDraw(props) {
     4: "https://luckydraw.live/images/temp/diamond-prize.svg",
   };
 
+  // Lắng nghe thay đổi từ localStorage (ví dụ khi reset từ tab khác)
   useEffect(() => {
-    const listFromStorage = JSON.parse(localStorage.getItem("list"));
-    setData(listFromStorage);
-  }, [data.length]);
+    const handleStorageChange = (e) => {
+      if (e.key === "list" && e.newValue) {
+        const listFromStorage = JSON.parse(e.newValue);
+        setData(listFromStorage);
+      }
+    };
+    
+    window.addEventListener("storage", handleStorageChange);
+    
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
 
   useEffect(() => {
     setHiddenWinner({});
@@ -176,7 +187,17 @@ function LuckyDraw(props) {
 
   // Hàm dừng và chốt số
   const handleStopSpin = useCallback(() => {
-    const winner = data[Math.floor(Math.random() * data.length)];
+    // Đọc trực tiếp từ localStorage để đảm bảo có data mới nhất sau khi reset
+    const currentData = JSON.parse(localStorage.getItem("list")) || [];
+    // Cập nhật state nếu cần
+    if (JSON.stringify(currentData) !== JSON.stringify(data)) {
+      setData(currentData);
+    }
+    
+    // Sử dụng data từ localStorage thay vì state để tránh dùng data cũ
+    const dataToUse = currentData.length > 0 ? currentData : data;
+    const winner = dataToUse[Math.floor(Math.random() * dataToUse.length)];
+    
     const winnerNumber = winner.id.split("");
     if (currentStep === 4) {
       setStopObj({
@@ -188,7 +209,7 @@ function LuckyDraw(props) {
         // first spin
         setHiddenWinner(winner);
         setWinnerNumber(winnerNumber);
-        const filterData = data.filter((e) => e.id !== winner.id);
+        const filterData = dataToUse.filter((e) => e.id !== winner.id);
         setData(filterData);
         localStorage.setItem("list", JSON.stringify(filterData));
       }
@@ -228,10 +249,7 @@ function LuckyDraw(props) {
       if (winnerTimeoutRef.current) {
         clearTimeout(winnerTimeoutRef.current);
       }
-      // Remove winner from data list immediately to prevent re-selection
-      const filterData = data.filter((e) => e.id !== winner.id);
-      setData(filterData);
-      localStorage.setItem("list", JSON.stringify(filterData));
+
       winnerTimeoutRef.current = setTimeout(() => {
         setWinner(winner);
         // Save to prizeType only when winner is displayed
@@ -240,6 +258,15 @@ function LuckyDraw(props) {
         prevList.push(winner);
         localStorage.setItem(prizeType, JSON.stringify(prevList));
         winnerTimeoutRef.current = null;
+
+        // Remove winner from data list immediately to prevent re-selection
+        const filterData = dataToUse.filter((e) => e.id !== winner.id);
+        setData(filterData);
+        localStorage.setItem("list", JSON.stringify(filterData));
+
+        if (currentStep === 2 && !JSON.parse(localStorage.getItem('AUTHORIZED_TOKEN'))) {
+          localStorage.setItem('AUTHORIZED_TOKEN', JSON.stringify(true));
+        }
       }, 3200);
       setSpinning(false);
       setWinnerNumber(winnerNumber);
